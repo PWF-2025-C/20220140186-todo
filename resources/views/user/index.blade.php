@@ -37,22 +37,51 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($users as $data)
+                            @forelse ($users as $user)
                                 <tr class="bg-gray-900">
                                     <td class="px-6 py-3 text-center text-blue-400">
-                                        {{ $data->id }}
+                                        {{ $user->id }}
                                     </td>
                                     <td class="px-6 py-3 text-left">
-                                        {{ $data->name }}
+                                        {{ $user->name }}
                                     </td>
                                     <td class="px-6 py-3 text-right">
                                         <span class="text-blue-400">
-                                            {{ $data->todos->where('is_done', true)->count() }} ({{ $data->todos->count() }})
+                                            {{ $user->todos->where('is_done', true)->count() }} ({{ $user->todos->count() }})
                                         </span>
                                     </td>
-                                    <td class="px-6 py-3 text-right">
-                                        <!-- Tombol aksi bisa ditambahkan di sini -->
-                                    </td>
+                                    <td class="px-6 py-4">
+                                    <div class="flex space-x-3">
+                                        {{-- Action here --}}
+                                        @if ($user->is_admin)
+                                        <form action="{{ route('user.removeadmin', $user) }}" method="Post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit"
+                                                class="text-blue-600 dark:text-blue-400 whitespace-nowrap">
+                                                Remove Admin
+                                            </button>
+                                        </form>
+                                        @else
+                                        <form action="{{ route('user.makeadmin', $user) }}" method="Post">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit"
+                                                class="text-red-600 dark:text-red-400 whitespace-nowrap">
+                                                Make Admin
+                                            </button>
+                                        </form>
+                                        @endif
+                                        <form action="{{ route('user.destroy', $user) }}" method="Post">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit"
+                                                class="text-red-600 dark:text-red-400 whitespace-nowrap">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
                                 </tr>
                             @empty
                                 <tr class="bg-gray-900">
