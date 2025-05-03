@@ -6,16 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -39,14 +30,16 @@ Route::middleware('auth')->group(function () {
     Route::patch('/todo/{todo}/incomplete', [TodoController::class, 'uncomplete'])->name('todo.uncomplete');
     Route::delete('/todo/{todo}', [TodoController::class, 'destroy'])->name('todo.destroy');
     Route::delete('/todo', [TodoController::class, 'destroyCompleted'])->name('todo.deleteallcompleted');
-
+});
     // Route::resource('/category', CategoryController::class);
 
-
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('user', UserController::class)->except(['show']);
     Route::get('/user', [UserController::class, 'index'])->name('user.index');
     Route::delete('/user/{user}', [UserController::class, 'destroy'])->name('user.destroy');
     Route::patch('/user/{user}/makeadmin', [UserController::class, 'makeadmin'])->name('user.makeadmin');
     Route::patch('/user/{user}/removeadmin', [UserController::class, 'removeadmin'])->name('user.removeadmin');
 });
+
 
 require __DIR__ . '/auth.php';
