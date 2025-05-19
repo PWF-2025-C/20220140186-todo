@@ -11,7 +11,7 @@ class TodoController extends Controller
 {
     public function index()
     {
-        $todos = Todo::where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
+        $todos = Todo::with('category')->where('user_id', Auth::id())->orderBy('created_at', 'desc')->get();
 
 
         $todosCompleted = Todo::where('user_id', Auth::id())
@@ -19,6 +19,18 @@ class TodoController extends Controller
             ->count();
 
         return view('todo.index', compact('todos', 'todosCompleted'));
+
+        // $todos = Todo::with('category')
+        // ->where('user_id', Auth::id())
+        // ->orderBy('is_done','asc')
+        // ->orderBy('created_at','desc')
+        // ->paginate(10);
+
+        // $todoCompleted = Todo::Where('user_id', Auth::id())
+        // ->where('is_done',true)
+        // ->count();
+
+        // return view('todo.index', compact('todos','todosCompleted'));
         
     }   
 
